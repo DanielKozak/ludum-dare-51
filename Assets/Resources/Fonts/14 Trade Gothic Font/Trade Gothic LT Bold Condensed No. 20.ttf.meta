@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: f7cfdb052f8810e44ada22698ddd6326
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - TradeGothic LT CondEighteen
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 11d7287c825905f4592170cfd40fc6d7, type: 3}
+  - {fileID: 12800000, guid: 34a4332b2ad513d44ba5bb381fbb5c4d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
