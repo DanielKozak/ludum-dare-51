@@ -173,7 +173,8 @@ public class GameConroller : Singleton<GameConroller>
             if (MeteorIndicator != null)
             {
                 MeteorIndicator.transform.position = spawnCoords;
-                MeteorIndicator.Play();
+                MeteorIndicator.transform.LookAt(GodController.Instance.transform.position, Vector3.right);
+                DOVirtual.DelayedCall(3f, () => MeteorIndicator.Play());
             }
         }
     }

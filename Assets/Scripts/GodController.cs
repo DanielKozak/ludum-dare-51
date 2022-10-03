@@ -48,7 +48,17 @@ public class GodController : Singleton<GodController>
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
+            if (GameConroller.Instance.RedCount < 5)
+            {
+                UIController.Instance.GodSupportLabel.text = "<color=red>Not enough matter</color>";
+                DOVirtual.DelayedCall(1f, () => UIController.Instance.GodSupportLabel.text = "");
+                return;
+            }
             PlayerAnimator.SetTrigger("Pray");
+            for (int i = 0; i < 5; i++)
+            {
+                GameConroller.Instance.RemoveRedCrystal();
+            }
             GameConroller.Instance.SpawnMeteor(Random.Range(5, 9), 49, 3);
         }
     }
@@ -106,7 +116,7 @@ public class GodController : Singleton<GodController>
             }
 
             PlayerAnimator.SetTrigger("Pray");
-            DOVirtual.DelayedCall(0.5f, () =>
+            DOVirtual.DelayedCall(1f, () =>
             {
                 TreeController.Instance.Upgrade();
                 for (int i = 0; i < 10; i++)
@@ -117,6 +127,8 @@ public class GodController : Singleton<GodController>
         }
         else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Rift"))
         {
+            if (GameConroller.Instance.RedCount < 10) return;
+
             PlayerAnimator.SetTrigger("Pray");
             DOVirtual.DelayedCall(2f, () =>
             {
@@ -132,6 +144,10 @@ public class GodController : Singleton<GodController>
         }
         else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Forge"))
         {
+            if (GameConroller.Instance.BlueCount < 1) return;
+
+            PlayerAnimator.SetTrigger("Give");
+            CurrentCollision.gameObject.GetComponent<Forge>().DwarfAnimator.SetBool("hasBlue", true);
 
             DOVirtual.DelayedCall(0.1f, () =>
             {
@@ -167,7 +183,7 @@ public class GodController : Singleton<GodController>
                 Debug.Log($"worm hit");
                 if (segment.HeadReference.isDead)
                 {
-                    GameConroller.Instance.SpawnRedCrystal(segment.transform.position);
+                    GameConroller.Instance.SpawnRedCrystal((Vector3)UnityEngine.Random.insideUnitCircle + segment.transform.position);
                     Time.timeScale = 0.8f;
                     DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1f);
 
@@ -214,14 +230,16 @@ public class GodController : Singleton<GodController>
 
         if (other.tag.Equals("Tree"))
         {
-            if (GameConroller.Instance.Seconds < 10) UIController.Instance.GodSupportLabel.text = "Not enough seconds";
+            if (GameConroller.Instance.Seconds < 10) UIController.Instance.GodSupportLabel.text = "<color=red>Not enough seconds</color>";
             else
                 UIController.Instance.GodSupportLabel.text = "SPACE to perform magic";
             return;
         }
         if (other.tag.Equals("Rift"))
         {
-            UIController.Instance.GodSupportLabel.text = "SPACE to create a forge";
+            if (GameConroller.Instance.RedCount < 10) UIController.Instance.GodSupportLabel.text = "<color=red>Not enough matter</color>";
+            else
+                UIController.Instance.GodSupportLabel.text = "SPACE to create a forge";
             return;
         }
 

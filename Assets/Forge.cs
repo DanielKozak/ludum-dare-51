@@ -56,10 +56,13 @@ public class Forge : MonoBehaviour
 
             if (currentTimer <= 0f)
             {
+                UIController.Instance.TweenSecondsCrystal(transform.position);
                 GameConroller.Instance.AddSecond();
                 isWorking = false;
                 DwarfAnimator.SetBool("Working", false);
                 ProgressSlider.gameObject.SetActive(false);
+                if (fuelCount == 0)
+                    DwarfAnimator.SetBool("hasBlue", false);
             }
         }
     }

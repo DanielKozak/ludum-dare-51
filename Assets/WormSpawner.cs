@@ -83,9 +83,10 @@ public class WormSpawner : Singleton<WormSpawner>
         currentSpawnDelay = level == 0 ? 30 : 45 / level;
         wormCount = CurrentWorms.Count;
 
-        float wormSpawnError = (float)preferredWormCount * 0.2f;
+        float wormSpawnError = (float)preferredWormCount * 0.3f;
         if (preferredWormCount - wormCount > wormSpawnError)
         {
+            if (wormCount > preferredWormCount) return;
             needWorm = true;
         }
     }

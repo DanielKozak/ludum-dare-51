@@ -27,6 +27,10 @@ public class UIController : Singleton<UIController>
 
     public List<Sprite> bubbleSprites;
 
+    public GameObject BlueIconPrefab;
+    public GameObject RedIconPrefab;
+    public GameObject SecondsIconPrefab;
+
     Camera mCam;
 
     private void Start()
@@ -60,7 +64,33 @@ public class UIController : Singleton<UIController>
             bubbles[index].DOColor(Color.white, 0.5f);
     }
 
+    public void TweenBlueCrystal(Vector3 worldPos)
+    {
+        var go = Instantiate(BlueIconPrefab);
+        go.transform.SetParent(transform);
+        go.transform.position = mCam.WorldToScreenPoint(worldPos);
+        var rt = go.transform as RectTransform;
+        rt.DOAnchorPos(BlueIndicator.transform.position, 2f).SetEase(Ease.InQuad);
+        Destroy(go, 2f);
+    }
+    public void TweenRedCrystal(Vector3 worldPos)
+    {
+        var go = Instantiate(RedIconPrefab);
+        go.transform.SetParent(transform);
 
+        go.transform.position = mCam.WorldToScreenPoint(worldPos);
+        go.transform.DOMove(RedIndicator.transform.position, 2f).SetEase(Ease.InQuad);
+        Destroy(go, 2f);
+    }
+    public void TweenSecondsCrystal(Vector3 worldPos)
+    {
+        var go = Instantiate(SecondsIconPrefab);
+        go.transform.SetParent(transform);
+
+        go.transform.position = mCam.WorldToScreenPoint(worldPos);
+        go.transform.DOMove(SecondsIndicator.transform.position, 2f).SetEase(Ease.InQuad);
+        Destroy(go, 2f);
+    }
 
 
 
