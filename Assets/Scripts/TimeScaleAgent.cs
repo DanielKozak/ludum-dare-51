@@ -31,7 +31,7 @@ public class TimeScaleAgent : MonoBehaviour
 
 
         debugLabel.text = $"{currentTimeScale} /n {Time.deltaTime / currentTimeScale}";
-
-
     }
+
+    public float GetCurrentTimeScale() => currentTimeScale;
 }

@@ -8,7 +8,7 @@ public class TimeController : Singleton<TimeController>
     List<TimeScaleAgent> agents;
     List<Transform> influencers;
 
-    public float MaxAttenuationDistance = 5f;
+    public float MaxAttenuationDistance = 7.5f;
     public float AttenuationFallof = 1f;
 
     public void ResetState()
@@ -52,7 +52,7 @@ public class TimeController : Singleton<TimeController>
             if (dist < MaxAttenuationDistance) minDistance = dist;
         }
         if (minDistance > MaxAttenuationDistance) return 1f;
-        return minDistance / 5f;
+        return minDistance / MaxAttenuationDistance;
     }
 
 

@@ -7,6 +7,7 @@ public class TreeController : Singleton<TreeController>
 {
     public List<Sprite> StateSprites = new List<Sprite>();
     public ParticleSystem TransitionParticleSystem;
+    public Animator CircleAnimation;
 
     int currentSpriteIndex = 0;
     SpriteRenderer TreeSprite;
@@ -40,6 +41,12 @@ public class TreeController : Singleton<TreeController>
         if (currentSpriteIndex + 1 > StateSprites.Count) return;
         SetSprite(currentSpriteIndex + 1);
     }
+
+    public int GetUpgradeLevel()
+    {
+        return currentSpriteIndex;
+    }
+
 
 
 }

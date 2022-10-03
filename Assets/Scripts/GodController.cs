@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GodController : Singleton<GodController>
 {
@@ -12,6 +13,9 @@ public class GodController : Singleton<GodController>
 
     public Collider2D TreeCollider;
     Collider2D myCollider;
+
+    public PostProcessVolume Ppv;
+    Vignette vignette;
 
     public void ResetState()
     {
@@ -44,18 +48,26 @@ public class GodController : Singleton<GodController>
     {
         if (Input.GetKey(KeyCode.W))
         {
+            // Debug.Log($"W");
+
             newPosition.y = 1f;
         }
         if (Input.GetKey(KeyCode.S))
         {
+            // Debug.Log($"S");
+
             newPosition.y = -1f;
         }
         if (Input.GetKey(KeyCode.D))
         {
+            // Debug.Log($"D");
+
             newPosition.x = 1f;
         }
         if (Input.GetKey(KeyCode.A))
         {
+            // Debug.Log($"A");
+
             newPosition.x = -1f;
         }
 
@@ -74,7 +86,6 @@ public class GodController : Singleton<GodController>
 
         }
 
-
         transform.position = Vector3.Lerp(transform.position, transform.position + newPosition, MoveSpeed * Time.deltaTime);
         newPosition = new Vector3();
 
@@ -82,13 +93,30 @@ public class GodController : Singleton<GodController>
 
     void SwingHammer()
     {
-        PlayerAnimator.SetTrigger("Hit");
-        DOVirtual.DelayedCall(0.35f, () =>
+        if (myCollider.IsTouching(TreeCollider))
         {
-            mCam.DOShakePosition(0.3f, 0.3f, 40);
-            CheckHammerHit();
-        });
+            PlayerAnimator.SetTrigger("Pray");
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                TreeController.Instance.Upgrade();
+            });
+        }
+        else
+        {
+            PlayerAnimator.SetTrigger("Hit");
+            DOVirtual.DelayedCall(0.35f, () =>
+            {
+                mCam.DOShakePosition(0.3f, 0.3f, 40);
+                CheckHammerHit();
+            });
+        }
 
+    }
+
+    [ContextMenu("debug")]
+    public void DebugVolume()
+    {
+        Debug.Log(Ppv.sharedProfile.settings[1]);
     }
 
 
@@ -101,11 +129,35 @@ public class GodController : Singleton<GodController>
             TreeController.Instance.Upgrade();
         }
 
+
         if (CurrentCollision != null)
         {
+            if (CurrentCollision.gameObject.tag.Equals("Worm"))
+            {
+                Debug.Log($"worm hit");
+                Time.timeScale = 0.3f;
+                DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
+
+                if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
+                {
+                    vignette.intensity.value = 0.5f;
+                    DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1.5f);
+
+                }
+
+                DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
+                // TreeController.instance.CircleAnimation.SetBool("pulse", true);
+            }/*
             ChronoCrystal crys;
             bool success = CurrentCollision.TryGetComponent<ChronoCrystal>(out crys);
-            if (success) crys.Hit();
+            if (success) crys.Hit();*/
+        }
+
+        if (CurrentCollision.gameObject.tag.Equals("Tree"))
+        {
+            Debug.Log($"A");
+
+            TreeController.Instance.CircleAnimation.SetBool("pulse", true);
         }
     }
 
@@ -113,11 +165,31 @@ public class GodController : Singleton<GodController>
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.gameObject.tag.Equals("Exit")) return;
         CurrentCollision = other.gameObject;
+
+        if (other.gameObject.tag.Equals("Tree"))
+        {
+            Debug.Log($"A");
+
+            TreeController.Instance.CircleAnimation.SetBool("pulse", true);
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (other.gameObject.tag.Equals("Exit"))
+        {
+            Debug.Log("Nothing there");
+            UIController.Instance.ShowMessageLabel("There's nothing here. Except the desert. And the woooooorms.");
+            return;
+        }
         CurrentCollision = null;
+        if (other.gameObject.tag.Equals("Tree"))
+        {
+            Debug.Log($"A");
+
+            TreeController.Instance.CircleAnimation.SetBool("pulse", false);
+        }
     }
 
 
