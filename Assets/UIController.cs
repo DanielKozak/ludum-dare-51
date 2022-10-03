@@ -11,11 +11,53 @@ public class UIController : Singleton<UIController>
     public TMP_Text MessageLabel;
     bool isLabelShown;
 
+    public Slider ProgressSlider;
+
+    public List<Image> bubbles;
+
+    public Image BlueIndicator;
+    public Image RedIndicator;
+    public Image SecondsIndicator;
+
+    public TMP_Text BlueIndicatorLabel;
+    public TMP_Text RedIndicatorLabel;
+    public TMP_Text SecondsIndicatorLabel;
+
+    public TMP_Text GodSupportLabel;
+
+    public List<Sprite> bubbleSprites;
+
     Camera mCam;
 
     private void Start()
     {
         mCam = Camera.main;
+        ResetState();
+    }
+
+    public void ResetState()
+    {
+        ProgressSlider.value = 0;
+        BlueIndicatorLabel.text = GameConroller.Instance.BlueCount.ToString();
+        RedIndicatorLabel.text = GameConroller.Instance.RedCount.ToString();
+        SecondsIndicatorLabel.text = GameConroller.Instance.Seconds.ToString();
+
+        foreach (var item in bubbles)
+        {
+            item.color = Color.clear;
+        }
+    }
+
+    public void TweenBubble(int index)
+    {
+        if (index == 15)
+        {
+            bubbles[index].DOColor(Color.white, 2f);
+            //TODO END GAME
+
+        }
+        else
+            bubbles[index].DOColor(Color.white, 2f);
     }
 
 

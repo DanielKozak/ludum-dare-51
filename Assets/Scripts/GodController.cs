@@ -16,11 +16,13 @@ public class GodController : Singleton<GodController>
 
     public PostProcessVolume Ppv;
     Vignette vignette;
+    Bloom bloom;
 
     public void ResetState()
     {
         myCollider = GetComponent<BoxCollider2D>();
         mCam = Camera.main;
+        transform.position = new Vector3(5, 5, 0);
     }
 
     void Start()
@@ -34,40 +36,41 @@ public class GodController : Singleton<GodController>
         if (Input.GetKeyUp(KeyCode.Space))
             SwingHammer();
 
+        HandleKeyboard();
+
     }
 
     //movement
     Vector3 newPosition = new Vector3();
     public float MoveSpeed = 1f;
 
-
+    void HandleKeyboard()
+    {
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            //TODO Summon rain
+        }
+    }
 
     Vector3 normalScale = new Vector3(1, 1, 1);
     Vector3 flippedScale = new Vector3(-1, 1, 1);
+
     void HandleMovement()
     {
         if (Input.GetKey(KeyCode.W))
         {
-            // Debug.Log($"W");
-
             newPosition.y = 1f;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            // Debug.Log($"S");
-
             newPosition.y = -1f;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            // Debug.Log($"D");
-
             newPosition.x = 1f;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            // Debug.Log($"A");
-
             newPosition.x = -1f;
         }
 
@@ -76,12 +79,13 @@ public class GodController : Singleton<GodController>
         if (newPosition.x < 0)
         {
             transform.localScale = flippedScale;
+            UIController.Instance.GodSupportLabel.transform.localScale = flippedScale * 0.1f;
             PlayerAnimator.SetBool("moveMirror", true);
         }
         else if (newPosition.x > 0)
         {
             transform.localScale = normalScale;
-
+            UIController.Instance.GodSupportLabel.transform.localScale = normalScale * 0.1f;
             PlayerAnimator.SetBool("moveMirror", false);
 
         }
@@ -95,10 +99,39 @@ public class GodController : Singleton<GodController>
     {
         if (myCollider.IsTouching(TreeCollider))
         {
+            if (GameConroller.Instance.Seconds < 10)
+            {
+                //TODO NOT ENOUGH SECONDS
+                return;
+            }
+
             PlayerAnimator.SetTrigger("Pray");
             DOVirtual.DelayedCall(0.5f, () =>
             {
                 TreeController.Instance.Upgrade();
+                for (int i = 0; i < 10; i++)
+                {
+                    GameConroller.Instance.RemoveSeconds();
+                }
+            });
+        }
+        else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Rift"))
+        {
+            PlayerAnimator.SetTrigger("Pray");
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                CurrentCollision.GetComponentInChildren<ParticleSystem>().Play();
+                // CurrentCollision.GetComponentInChildren<BoxCollider2D>().enabled = false;
+
+                //TODO Place Forge
+            });
+        }
+        else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Forge"))
+        {
+
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                //TODO Transfer Blue
             });
         }
         else
@@ -122,43 +155,56 @@ public class GodController : Singleton<GodController>
 
     void CheckHammerHit()
     {
-        // Debug.Log("Tree Hit Check");
-
-        if (myCollider.IsTouching(TreeCollider))
-        {
-            TreeController.Instance.Upgrade();
-        }
-
-
         if (CurrentCollision != null)
         {
             if (CurrentCollision.gameObject.tag.Equals("Worm"))
             {
+                WormSegment segment = CurrentCollision.gameObject.GetComponent<WormSegment>();
                 Debug.Log($"worm hit");
-                Time.timeScale = 0.3f;
-                DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
-
-                if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
+                if (segment.HeadReference.isDead)
                 {
-                    vignette.intensity.value = 0.5f;
-                    DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1.5f);
+                    //TODO SPAWN CRYSTAL
+                    Time.timeScale = 0.8f;
+                    DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1f);
 
+                    if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
+                    {
+                        vignette.intensity.value = 0.47f;
+                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1f);
+                    }
+                    Destroy(CurrentCollision.gameObject);
+                }
+                else
+                {
+                    Time.timeScale = 0.3f;
+                    segment.HeadReference.isDead = true;
+                    DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
+
+                    if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
+                    {
+                        vignette.intensity.value = 0.5f;
+                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1.5f);
+                    }
                 }
 
-                DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
+
+                // DOVirtual.DelayedCall(1.5f, () => gameObject.GetComponent<WormSegment>().HeadReference.isDead = true);
+
+
+                // DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
                 // TreeController.instance.CircleAnimation.SetBool("pulse", true);
             }/*
             ChronoCrystal crys;
             bool success = CurrentCollision.TryGetComponent<ChronoCrystal>(out crys);
             if (success) crys.Hit();*/
         }
+        /*
+                if (CurrentCollision.gameObject.tag.Equals("Tree"))
+                {
+                    Debug.Log($"A");
 
-        if (CurrentCollision.gameObject.tag.Equals("Tree"))
-        {
-            Debug.Log($"A");
-
-            TreeController.Instance.CircleAnimation.SetBool("pulse", true);
-        }
+                    TreeController.Instance.CircleAnimation.SetBool("pulse", true);
+                }*/
     }
 
     GameObject CurrentCollision;
@@ -168,13 +214,22 @@ public class GodController : Singleton<GodController>
         if (other.gameObject.tag.Equals("Exit")) return;
         CurrentCollision = other.gameObject;
 
-        if (other.gameObject.tag.Equals("Tree"))
-        {
-            Debug.Log($"A");
 
-            TreeController.Instance.CircleAnimation.SetBool("pulse", true);
+        if (other.tag.Equals("Tree"))
+        {
+            if (GameConroller.Instance.Seconds < 10) UIController.Instance.GodSupportLabel.text = "Not enough seconds";
+            else
+                UIController.Instance.GodSupportLabel.text = "SPACE to perform magic";
+            return;
         }
+        if (other.tag.Equals("Rift"))
+        {
+            UIController.Instance.GodSupportLabel.text = "SPACE to create a forge";
+            return;
+        }
+
     }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.tag.Equals("Exit"))
@@ -183,13 +238,18 @@ public class GodController : Singleton<GodController>
             UIController.Instance.ShowMessageLabel("There's nothing here. Except the desert. And the woooooorms.");
             return;
         }
-        CurrentCollision = null;
-        if (other.gameObject.tag.Equals("Tree"))
+        if (other.tag.Equals("Tree"))
         {
-            Debug.Log($"A");
-
-            TreeController.Instance.CircleAnimation.SetBool("pulse", false);
+            UIController.Instance.GodSupportLabel.text = "";
+            return;
         }
+        if (other.tag.Equals("Rift"))
+        {
+            UIController.Instance.GodSupportLabel.text = "";
+            return;
+        }
+
+        CurrentCollision = null;
     }
 
 

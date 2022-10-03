@@ -33,11 +33,14 @@ public class WormSpawner : Singleton<WormSpawner>
         var head = Instantiate(WormHeadPrefab, newWorm.transform);
         segments[0] = head.GetComponent<WormSegment>();
         segments[0].isHead = true;
+        segments[0].HeadReference = segments[0].GetComponent<WormHead>();
+
         for (int i = 1; i < segmentCount; i++)
         {
             segments[i] = Instantiate(WormSegmentPrefab, newWorm.transform).GetComponent<WormSegment>();
             segments[i].PreviousSegment = segments[i - 1];
             segments[i].transform.position = new Vector3(spawnPoint.x, spawnPoint.y - (WormSegment.wormDisplacementDistance * i), 0);
+            segments[i].HeadReference = segments[0].GetComponent<WormHead>();
         }
 
     }
