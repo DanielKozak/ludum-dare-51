@@ -509,7 +509,10 @@ MonoBehaviour:
   Plugins: []
   MasterBanks:
   - Master
-  Banks: []
+  Banks:
+  - Music
+  - SFX
+  - TutorialVoice
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0

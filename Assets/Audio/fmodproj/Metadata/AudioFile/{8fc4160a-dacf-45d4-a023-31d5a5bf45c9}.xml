@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{8fc4160a-dacf-45d4-a023-31d5a5bf45c9}">
+		<property name="assetPath">
+			<value>forge_create.WAV</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.71731250000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{dcd6d511-eaa4-485c-b427-90148abdcf83}</destination>
+		</relationship>
+	</object>
+</objects>

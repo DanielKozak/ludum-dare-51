@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{a388d2f3-d3b2-46eb-9b92-2758d6e52d7c}">
+		<property name="assetPath">
+			<value>worm_move.WAV</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.1809375</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{dcd6d511-eaa4-485c-b427-90148abdcf83}</destination>
+		</relationship>
+	</object>
+</objects>

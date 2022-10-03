@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{4bf86dfb-be77-4656-b5ce-9a870852647b}">
+		<property name="name">
+			<value>isWalkin</value>
+		</property>
+		<relationship name="folder">
+			<destination>{2ee54c34-4785-4f55-9091-52d6e14a19cd}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{2b2ce056-00f2-4d59-a8ad-43a49a4799d5}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{2b2ce056-00f2-4d59-a8ad-43a49a4799d5}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

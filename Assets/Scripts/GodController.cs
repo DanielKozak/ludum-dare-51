@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Rendering.PostProcessing;
+using FMODUnity;
 
 public class GodController : Singleton<GodController>
 {
@@ -156,6 +157,7 @@ public class GodController : Singleton<GodController>
         }
         else
         {
+            // RuntimeManager.PlayOneShot("event:/SFX/Hammer");
             PlayerAnimator.SetTrigger("Hit");
             DOVirtual.DelayedCall(0.35f, () =>
             {

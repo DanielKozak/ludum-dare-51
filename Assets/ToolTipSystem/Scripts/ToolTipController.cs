@@ -51,6 +51,5 @@ public class ToolTipController : Singleton<ToolTipController>
 
     public void OnButtonClick()
     {
-        Debug.Log("LFOF");
     }
 }

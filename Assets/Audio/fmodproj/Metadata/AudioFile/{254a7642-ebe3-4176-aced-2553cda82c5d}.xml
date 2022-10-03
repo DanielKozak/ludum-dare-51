@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{254a7642-ebe3-4176-aced-2553cda82c5d}">
+		<property name="assetPath">
+			<value>hammer_hit.WAV</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.27622916666666669</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{dcd6d511-eaa4-485c-b427-90148abdcf83}</destination>
+		</relationship>
+	</object>
+</objects>
