@@ -48,7 +48,8 @@ public class GodController : Singleton<GodController>
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
-            //TODO Summon rain
+            PlayerAnimator.SetTrigger("Pray");
+            GameConroller.Instance.SpawnMeteor(Random.Range(5, 9), 49, 3);
         }
     }
 
@@ -101,7 +102,6 @@ public class GodController : Singleton<GodController>
         {
             if (GameConroller.Instance.Seconds < 10)
             {
-                //TODO NOT ENOUGH SECONDS
                 return;
             }
 
@@ -118,20 +118,24 @@ public class GodController : Singleton<GodController>
         else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Rift"))
         {
             PlayerAnimator.SetTrigger("Pray");
-            DOVirtual.DelayedCall(0.5f, () =>
+            DOVirtual.DelayedCall(2f, () =>
             {
                 CurrentCollision.GetComponentInChildren<ParticleSystem>().Play();
-                // CurrentCollision.GetComponentInChildren<BoxCollider2D>().enabled = false;
+                CurrentCollision.GetComponentInChildren<BoxCollider2D>().enabled = false;
 
-                //TODO Place Forge
+                for (int i = 0; i < 10; i++)
+                {
+                    GameConroller.Instance.RemoveRedCrystal();
+                }
+                GameConroller.Instance.PlaceForge(CurrentCollision.transform.position);
             });
         }
         else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Forge"))
         {
 
-            DOVirtual.DelayedCall(0.5f, () =>
+            DOVirtual.DelayedCall(0.1f, () =>
             {
-                //TODO Transfer Blue
+                CurrentCollision.gameObject.GetComponent<Forge>().AddFuel();
             });
         }
         else
@@ -163,14 +167,14 @@ public class GodController : Singleton<GodController>
                 Debug.Log($"worm hit");
                 if (segment.HeadReference.isDead)
                 {
-                    //TODO SPAWN CRYSTAL
+                    GameConroller.Instance.SpawnRedCrystal(segment.transform.position);
                     Time.timeScale = 0.8f;
                     DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1f);
 
                     if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
                     {
                         vignette.intensity.value = 0.47f;
-                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1f);
+                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.416f, 1f);
                     }
                     Destroy(CurrentCollision.gameObject);
                 }
@@ -183,28 +187,21 @@ public class GodController : Singleton<GodController>
                     if (Ppv.profile.TryGetSettings<Vignette>(out vignette))
                     {
                         vignette.intensity.value = 0.5f;
-                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.45f, 1.5f);
+                        DOTween.To(() => vignette.intensity.value, x => vignette.intensity.value = x, 0.416f, 1.5f);
                     }
                 }
+            }
+            if (CurrentCollision.gameObject.tag.Equals("Red"))
+            {
+                CurrentCollision.gameObject.GetComponent<ChronoCrystal>().Hit();
+            }
+            if (CurrentCollision.gameObject.tag.Equals("Blue"))
+            {
+                CurrentCollision.gameObject.GetComponent<ChronoCrystal>().Hit();
 
+            }
 
-                // DOVirtual.DelayedCall(1.5f, () => gameObject.GetComponent<WormSegment>().HeadReference.isDead = true);
-
-
-                // DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1.5f);
-                // TreeController.instance.CircleAnimation.SetBool("pulse", true);
-            }/*
-            ChronoCrystal crys;
-            bool success = CurrentCollision.TryGetComponent<ChronoCrystal>(out crys);
-            if (success) crys.Hit();*/
         }
-        /*
-                if (CurrentCollision.gameObject.tag.Equals("Tree"))
-                {
-                    Debug.Log($"A");
-
-                    TreeController.Instance.CircleAnimation.SetBool("pulse", true);
-                }*/
     }
 
     GameObject CurrentCollision;

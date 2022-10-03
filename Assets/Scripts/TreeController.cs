@@ -50,7 +50,7 @@ public class TreeController : Singleton<TreeController>
         DOVirtual.DelayedCall(0.5f, () => TreeSprite.sprite = StateSprites[index]);
         currentSpriteIndex = index;
         if (currentSpriteIndex == 6) ShimmerParticleSystem.Play();
-        Debug.Log($"{currentSpriteIndex} {ShimmerParticleSystem.isPlaying}");
+        // Debug.Log($"{currentSpriteIndex} {ShimmerParticleSystem.isPlaying}");
     }
 
     public void Upgrade()
@@ -62,8 +62,8 @@ public class TreeController : Singleton<TreeController>
         UIParticleSystem_2.Play();
         DOVirtual.DelayedCall(3f, () =>
         {
-            UIController.Instance.bubbles[index_1].DOColor(Color.white, 0.5f);
-            UIController.Instance.bubbles[index_2].DOColor(Color.white, 0.5f);
+            UIController.Instance.TweenBubble(index_1);
+            UIController.Instance.TweenBubble(index_2);
         });
     }
 

@@ -52,12 +52,12 @@ public class UIController : Singleton<UIController>
     {
         if (index == 15)
         {
-            bubbles[index].DOColor(Color.white, 2f);
+            bubbles[index].DOColor(Color.white, 0.5f);
             //TODO END GAME
 
         }
         else
-            bubbles[index].DOColor(Color.white, 2f);
+            bubbles[index].DOColor(Color.white, 0.5f);
     }
 
 

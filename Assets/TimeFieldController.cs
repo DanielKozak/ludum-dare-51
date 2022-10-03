@@ -8,8 +8,8 @@ public class TimeFieldController : Singleton<TimeFieldController>
     Grid coordGrid;
 
     float[,] data;
-    int dataSize = 60;
-    int halfDataSize = 30;
+    int dataSize = 100;
+    int halfDataSize = 50;
 
     [NonSerialized] public List<Vector3> TargetList;
 
@@ -46,21 +46,16 @@ public class TimeFieldController : Singleton<TimeFieldController>
             {
                 if (data[x, y] > 0)
                     TargetList.Add(coordGrid.CellToWorld(new Vector3Int(x - halfDataSize, y - halfDataSize)));
-
             }
 
+        Debug.Log($"targetList with {TargetList.Count} nonrandom entries:");
         while (TargetList.Count < 10)
         {
             AddRandomTarget();
         }
 
         // TargetList.Sort();
-        Debug.Log($"targetList sorted with {TargetList.Count} entries:");
-        // foreach (var item in TargetList)
-        // {
-        //     Debug.Log(item);
 
-        // }
     }
 
     public Vector3 GetRandomWorldTarget()
@@ -79,9 +74,15 @@ public class TimeFieldController : Singleton<TimeFieldController>
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddValue(Vector3 position, float value)
     {
-
+        var indices = coordGrid.WorldToCell(position);
+        data[indices.x + halfDataSize, indices.y + halfDataSize] += value;
     }
+    public void RemoveValue(Vector3 position, float value)
+    {
+        var indices = coordGrid.WorldToCell(position);
+        data[indices.x + halfDataSize, indices.y + halfDataSize] -= value;
+    }
+
 }

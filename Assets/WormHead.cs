@@ -37,12 +37,37 @@ public class WormHead : MonoBehaviour
 
     void CheckWormCollisions()
     {
-
     }
 
     void Update()
     {
         if (!isDead) ProcessMovement();
+    }
+    GameObject CurrentCollision;
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag.Equals("Exit")) return;
+
+        CurrentCollision = other.gameObject;
+
+
+        if (other.tag.Equals("Blue"))
+        {
+            other.GetComponent<ChronoCrystal>().Consume();
+            return;
+        }
+
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag.Equals("Exit"))
+        {
+            return;
+        }
+
+        CurrentCollision = null;
     }
 
 

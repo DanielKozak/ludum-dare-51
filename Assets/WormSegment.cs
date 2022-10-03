@@ -15,15 +15,11 @@ public class WormSegment : MonoBehaviour
 
     float distanceSpeedModifier;
 
-    public Vector3 deathDisplaceDirection;
-    Quaternion deathRotation;
 
     SpriteRenderer mRenderer;
 
     void Start()
     {
-        deathDisplaceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        deathRotation = Random.rotation;
         // Debug.Log(transform.position + deathDisplaceDirection);
         mRenderer = GetComponent<SpriteRenderer>();
 
@@ -38,7 +34,7 @@ public class WormSegment : MonoBehaviour
                 mRenderer.color = Color.black;
                 // Debug.Log(transform.position + deathDisplaceDirection);
 
-                transform.position = Vector3.Lerp(transform.position, transform.position + deathDisplaceDirection, Time.deltaTime); //TODO Fix
+                transform.position = Vector3.Lerp(transform.position, transform.position + (Vector3)UnityEngine.Random.insideUnitCircle, Time.deltaTime); //TODO Fix
                 // transform.rotation = Quaternion.Lerp(transform.rotation, deathRotation, Time.deltaTime);
             }
             else
@@ -51,7 +47,7 @@ public class WormSegment : MonoBehaviour
         {
             mRenderer.color = Color.black;
 
-            transform.position = Vector3.Lerp(transform.position, transform.position + deathDisplaceDirection, Time.deltaTime); //TODO Fix
+            transform.position = Vector3.Lerp(transform.position, transform.position + (Vector3)UnityEngine.Random.insideUnitCircle, Time.deltaTime); //TODO Fix
             // transform.rotation = Quaternion.Lerp(transform.rotation, deathRotation, Time.deltaTime);
         }
         else

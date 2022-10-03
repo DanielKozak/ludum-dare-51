@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,26 +12,49 @@ public class ChronoCrystal : MonoBehaviour
 
     float minDisplacement = -2f;
     float maxDisplacement = 2f;
+    public bool isRed = false;
+
+    public TrailRenderer Trail;
 
     void Start()
     {
         mRenderer = GetComponent<SpriteRenderer>();
         SetSprite();
-        Vector3 diplacement = transform.position + new Vector3(Random.Range(minDisplacement, maxDisplacement), Random.Range(minDisplacement, maxDisplacement), 0);
-        transform.DOJump(diplacement, 3, 1, Random.Range(0.5f, 3f));
+        // Vector3 diplacement = transform.position + new Vector3(Random.Range(minDisplacement, maxDisplacement), Random.Range(minDisplacement, maxDisplacement), 0);
+        // transform.DOJump(diplacement, 3, 1, Random.Range(0.5f, 3f));
     }
 
 
     void SetSprite()
     {
-        var sprites = Resources.LoadAll<Sprite>("Textures/chrystal_chrono");
-        mRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
+        Sprite[] sprites;
+
+        if (!isRed) sprites = Resources.LoadAll<Sprite>("Textures/chrystal_chrono");
+        else sprites = Resources.LoadAll<Sprite>("Textures/chrystal_matter");
+        mRenderer.sprite = sprites[UnityEngine.Random.Range(0, sprites.Length)];
     }
 
     public void Hit()
     {
+        Debug.Log("hit crystal");
         particle.Play();
         mRenderer.enabled = false;
         Destroy(gameObject, 0.7f);
+        if (isRed)
+        {
+            GameConroller.Instance.AddRedCrystal();
+        }
+        else
+        {
+            GameConroller.Instance.AddBlueCrystal();
+            TimeFieldController.Instance.RemoveValue(transform.position, 0.2f);
+        }
+    }
+    public void Consume()
+    {
+        particle.Play();
+        mRenderer.enabled = false;
+        Destroy(gameObject, 0.7f);
+        TimeFieldController.Instance.RemoveValue(transform.position, 0.2f);
     }
 }

@@ -9,6 +9,8 @@ TagManager:
   - Worm
   - Forge
   - Rift
+  - Red
+  - Blue
   layers:
   - Default
   - TransparentFX
