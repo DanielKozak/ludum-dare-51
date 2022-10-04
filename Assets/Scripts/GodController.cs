@@ -49,6 +49,14 @@ public class GodController : Singleton<GodController>
     {
         if (Input.GetKeyUp(KeyCode.F))
         {
+
+            if (GameConroller.Instance.Forges.Count == 0)
+            {
+                UIController.Instance.GodSupportLabel.text = "<color=red>Need at least one forge for that </color>";
+                DOVirtual.DelayedCall(1f, () => UIController.Instance.GodSupportLabel.text = "");
+                return;
+            }
+
             if (GameConroller.Instance.RedCount < 5)
             {
                 UIController.Instance.GodSupportLabel.text = "<color=red>Not enough matter</color>";
@@ -117,29 +125,29 @@ public class GodController : Singleton<GodController>
             }
 
             PlayerAnimator.SetTrigger("Pray");
+            TreeController.Instance.Upgrade();
+            for (int i = 0; i < 10; i++)
+            {
+                GameConroller.Instance.RemoveSeconds();
+            }
             DOVirtual.DelayedCall(1f, () =>
             {
-                TreeController.Instance.Upgrade();
-                for (int i = 0; i < 10; i++)
-                {
-                    GameConroller.Instance.RemoveSeconds();
-                }
             });
         }
         else if (CurrentCollision != null && CurrentCollision.gameObject.tag.Equals("Rift"))
         {
             if (GameConroller.Instance.RedCount < 10) return;
 
+            for (int i = 0; i < 10; i++)
+            {
+                GameConroller.Instance.RemoveRedCrystal();
+            }
             PlayerAnimator.SetTrigger("Pray");
             DOVirtual.DelayedCall(2f, () =>
             {
                 CurrentCollision.GetComponentInChildren<ParticleSystem>().Play();
                 CurrentCollision.GetComponentInChildren<BoxCollider2D>().enabled = false;
 
-                for (int i = 0; i < 10; i++)
-                {
-                    GameConroller.Instance.RemoveRedCrystal();
-                }
                 GameConroller.Instance.PlaceForge(CurrentCollision.transform.position);
             });
         }
@@ -147,6 +155,7 @@ public class GodController : Singleton<GodController>
         {
             if (GameConroller.Instance.BlueCount < 1) return;
 
+            GameConroller.Instance.RemoveBlueCrystal();
             PlayerAnimator.SetTrigger("Give");
             CurrentCollision.gameObject.GetComponent<Forge>().DwarfAnimator.SetBool("hasBlue", true);
 
@@ -185,7 +194,8 @@ public class GodController : Singleton<GodController>
                 Debug.Log($"worm hit");
                 if (segment.HeadReference.isDead)
                 {
-                    GameConroller.Instance.SpawnRedCrystal((Vector3)UnityEngine.Random.insideUnitCircle + segment.transform.position);
+                    GameConroller.Instance.SpawnRedCrystal((Vector3)UnityEngine.Random.insideUnitCircle * 3 + segment.transform.position);
+                    GameConroller.Instance.SpawnRedCrystal((Vector3)UnityEngine.Random.insideUnitCircle * 3 + segment.transform.position);
                     Time.timeScale = 0.8f;
                     DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1f, 1f);
 
@@ -239,7 +249,7 @@ public class GodController : Singleton<GodController>
         }
         if (other.tag.Equals("Rift"))
         {
-            if (GameConroller.Instance.RedCount < 10) UIController.Instance.GodSupportLabel.text = "<color=red>Not enough matter</color>";
+            if (GameConroller.Instance.RedCount < 10) UIController.Instance.GodSupportLabel.text = "<color=red>Needs 10 matter to construct a forge</color>";
             else
                 UIController.Instance.GodSupportLabel.text = "SPACE to create a forge";
             return;

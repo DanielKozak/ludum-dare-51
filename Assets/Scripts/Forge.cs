@@ -39,10 +39,10 @@ public class Forge : MonoBehaviour
 
         if (!isWorking)
         {
-            if (fuelCount >= 5)
+            if (fuelCount >= 3)
             {
                 isWorking = true;
-                fuelCount -= 5;
+                fuelCount -= 3;
                 SetForgeLabelText(fuelCount);
                 DwarfAnimator.SetBool("Working", true);
                 currentTimer = timer;
@@ -55,7 +55,8 @@ public class Forge : MonoBehaviour
         {
 
             currentTimer -= Time.deltaTime * timeAgent.GetCurrentTimeScale();
-            ProgressSlider.value += currentTimer;
+            ProgressSlider.value = (timer - currentTimer);
+            Debug.Log($"{currentTimer} {ProgressSlider.value}");
 
             if (currentTimer <= 0f)
             {
@@ -74,7 +75,7 @@ public class Forge : MonoBehaviour
 
     void SetForgeLabelText(int count)
     {
-        UpperLabel.text = $"{count}/5 = 1";
+        UpperLabel.text = $"{count}/3 = 1";
     }
     bool canDrink = true;
     IEnumerator BeerRoutine()

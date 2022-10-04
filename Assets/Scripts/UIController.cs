@@ -27,6 +27,8 @@ public class UIController : Singleton<UIController>
 
     public TMP_Text GodSupportLabel;
 
+    public TMP_Text MeteorTextLabel;
+
     public List<Sprite> bubbleSprites;
 
     public GameObject BlueIconPrefab;
@@ -64,6 +66,7 @@ public class UIController : Singleton<UIController>
             vignette.intensity.value = defaultVignetteintensity;
         }
         Circle.SetActive(true);
+        MeteorTextLabel.gameObject.SetActive(false);
     }
 
     public void TweenBubble(int index)
@@ -71,7 +74,10 @@ public class UIController : Singleton<UIController>
         if (index == 15)
         {
             bubbles[index].DOColor(Color.white, 0.5f);
-            //TODO END GAME
+            DOVirtual.DelayedCall(2f, () =>
+        {
+            AnimateEndGame();
+        });
 
         }
         else

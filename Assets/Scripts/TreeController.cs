@@ -35,7 +35,7 @@ public class TreeController : Singleton<TreeController>
     [ContextMenu("set 6")]
     public void TestUpgrade()
     {
-        SetSprite(6);
+        Upgrade();
     }
 
 

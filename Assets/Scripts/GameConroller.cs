@@ -74,7 +74,7 @@ public class GameConroller : Singleton<GameConroller>
     [ContextMenu("red")]
     public void AddRedCrystal()
     {
-        RuntimeManager.PlayOneShot("event:/SFX/crystal_hit");
+
         RedCount += 1;
         UIController.Instance.RedIndicatorLabel.text = RedCount.ToString();
         UIController.Instance.RedIndicatorLabel.transform.parent.DOScale(new Vector3(1.2f, 1.2f, 1), 0.8f)
@@ -97,8 +97,9 @@ public class GameConroller : Singleton<GameConroller>
     public void RemoveBlueCrystal()
     {
         BlueCount -= 1;
-        UIController.Instance.RedIndicatorLabel.text = BlueCount.ToString();
+        UIController.Instance.BlueIndicatorLabel.text = BlueCount.ToString();
     }
+
     [ContextMenu("sec")]
     public void AddSecond()
     {
@@ -109,11 +110,11 @@ public class GameConroller : Singleton<GameConroller>
 
         if (Seconds >= 10)
         {
-            TreeController.instance.CircleAnimation.SetBool("pulse", true);
+            TreeController.Instance.CircleAnimation.SetBool("pulse", true);
         }
         if (Seconds <= 10)
         {
-            TreeController.instance.CircleAnimation.SetBool("pulse", false);
+            TreeController.Instance.CircleAnimation.SetBool("pulse", false);
         }
     }
 
@@ -194,5 +195,6 @@ public class GameConroller : Singleton<GameConroller>
         var forge = Instantiate(ForgePrefab, position, Quaternion.identity);
         forge.transform.SetParent(ForgeContainer.transform);
         Forges.Add(forge);
+        UIController.Instance.MeteorTextLabel.gameObject.SetActive(true);
     }
 }
